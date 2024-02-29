@@ -39,12 +39,16 @@ defmodule ShowmakerBackend.Support.Types.UUID do
   @doc """
   Converts a binary UUID into a string.
   """
-  def load(raw, _loader, params) do
+  def load(raw, _loader, %{} = params) do
     prefix = Map.get(params, :prefix)
 
     with {:ok, uuid} <- UUIDv7.load(raw) do
-      {:ok, append_prefix(uuid, prefix)}
+      append_prefix(uuid, prefix)
     end
+  end
+
+  def load(raw, loader, _params) do
+    load(raw, loader, %{})
   end
 
   @doc """
@@ -69,11 +73,17 @@ defmodule ShowmakerBackend.Support.Types.UUID do
     a === b
   end
 
-  def autogenerate(params) do
+  def autogenerate(params \\ nil)
+
+  def autogenerate(%{} = params) do
     prefix = Map.get(params, :prefix)
     uuid = generate()
 
     append_prefix(uuid, prefix)
+  end
+
+  def autogenerate(_params) do
+    autogenerate(%{})
   end
 
   def generate, do: UUIDv7.generate()

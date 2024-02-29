@@ -35,3 +35,10 @@ showmaker_backend-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# LSP
+.elixir_ls
+.elixir-tools
+.lexical
+
+# Elixir shell
+.iex

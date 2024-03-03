@@ -2,7 +2,6 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     branches:
-      - develop
       - main
 
 name: Format and Test

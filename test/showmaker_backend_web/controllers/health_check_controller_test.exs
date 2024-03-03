@@ -12,7 +12,7 @@ defmodule ShowmakerBackendWeb.HealthCheckControllerTest do
              "app_name" => "Showmaker backend",
              "elapsed_time" => _elapsed_time,
              "start_time" => _start_time,
-             "version" => "0.1.0"
+             "version" => "0.1.1"
            } = json_response(conn, 200)
   end
 end

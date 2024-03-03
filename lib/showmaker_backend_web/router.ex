@@ -20,6 +20,12 @@ defmodule ShowmakerBackendWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/api", ShowmakerBackendWeb do
+    pipe_through :api
+
+    get "/health_check", HealthCheckController, :index
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ShowmakerBackendWeb do
   #   pipe_through :api

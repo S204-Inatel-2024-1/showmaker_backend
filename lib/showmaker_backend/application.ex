@@ -5,8 +5,12 @@ defmodule ShowmakerBackend.Application do
 
   use Application
 
+  alias ShowmakerBackend.AppInfo
+
   @impl true
   def start(_type, _args) do
+    AppInfo.set_start_time()
+
     children = [
       ShowmakerBackendWeb.Telemetry,
       ShowmakerBackend.Repo,

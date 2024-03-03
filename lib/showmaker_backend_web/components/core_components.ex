@@ -16,7 +16,7 @@ defmodule ShowmakerBackendWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.HTML
+  alias Phoenix.HTML.Form
   alias Phoenix.LiveView.JS
   import ShowmakerBackendWeb.Gettext
 

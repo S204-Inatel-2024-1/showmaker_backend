@@ -42,3 +42,6 @@ npm-debug.log
 
 # Elixir shell
 .iex
+
+# Environment variables
+*.env

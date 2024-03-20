@@ -114,4 +114,57 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  endpoint_parts =
+    System.get_env("AWS_ENDPOINT_URL_S3")
+    |> String.split("//")
+
+  config :ex_aws,
+    access_key_id: [{:system, "AWS_ACCESS_KEY_ID"}, :instance_role],
+    secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
+    region: [{:system, "AWS_REGION"}, :instance_role]
+
+  config :ex_aws, :s3,
+    scheme:
+      endpoint_parts
+      |> List.first()
+      |> Kernel.<>("//"),
+    host:
+      endpoint_parts
+      |> List.last(),
+    port: 443
+end
+
+if config_env() == :dev do
+  import Dotenvy
+
+  source!([".env", System.get_env()])
+
+  endpoint_parts =
+    env!("AWS_ENDPOINT_URL_S3", :string!)
+    |> String.split("//")
+
+  config :ex_aws,
+    access_key_id: env!("AWS_ACCESS_KEY_ID", :string!),
+    secret_access_key: env!("AWS_SECRET_ACCESS_KEY", :string!),
+    region: env!("AWS_REGION", :string!)
+
+  config :ex_aws, :s3,
+    scheme:
+      endpoint_parts
+      |> List.first()
+      |> Kernel.<>("//"),
+    host:
+      endpoint_parts
+      |> List.last(),
+    port: 443
+end
+
+if config_env() in [:prod, :dev] do
+  config :showmaker_backend,
+    behaviours: [
+      object_storage: [
+        tigris: ShowmakerBackend.Support.Providers.Tigris
+      ]
+    ]
 end

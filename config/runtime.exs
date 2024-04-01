@@ -115,6 +115,12 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
+  config :showmaker_backend, ShowmakerBackend.Mailer,
+    adapter: Swoosh.Adapters.Sendgrid,
+    api_key: System.get_env("SENDGRID_API_KEY")
+
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
   endpoint_parts =
     System.get_env("AWS_ENDPOINT_URL_S3")
     |> String.split("//")
@@ -158,6 +164,16 @@ if config_env() == :dev do
       endpoint_parts
       |> List.last(),
     port: 443
+
+  sendgrid_api_key = env!("SENDGRID_API_KEY", :string?)
+
+  if sendgrid_api_key != nil do
+    config :showmaker_backend, ShowmakerBackend.Mailer,
+      adapter: Swoosh.Adapters.Sendgrid,
+      api_key: sendgrid_api_key
+
+    config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+  end
 end
 
 if config_env() in [:prod, :dev] do

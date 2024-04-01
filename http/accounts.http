@@ -1,0 +1,99 @@
+@access_token = {{sign_in.response.body.$.data.access_token}}
+
+###
+
+POST {{base_url}}/api/accounts/register
+Content-Type: application/json
+
+{
+  "account": {
+    "email": "{{email}}",
+    "password": "{{password}}"
+  }
+}
+
+###
+
+POST {{base_url}}/api/accounts/confirm
+Content-Type: application/json
+
+{
+  "account": {
+    "email": "{{email}}"
+  }
+}
+
+###
+
+POST {{base_url}}/api/accounts/confirm/{{confirm_token}}
+
+###
+
+# @name sign_in
+POST {{base_url}}/api/accounts/sign_in
+Content-Type: application/json
+
+{
+  "account": {
+    "email": "{{email}}",
+    "password": "{{password}}"
+  }
+}
+
+###
+
+DELETE {{base_url}}/api/accounts/sign_out
+Authorization: Bearer {{access_token}}
+
+###
+
+POST {{base_url}}/api/accounts/reset_password
+Content-Type: application/json
+
+{
+  "account": {
+    "email": "{{email}}"
+  }
+}
+
+###
+
+PUT {{base_url}}/api/accounts/reset_password/{{reset_token}}
+Content-Type: application/json
+
+{
+  "account": {
+    "password": "{{new_password}}"
+  }
+}
+
+###
+
+# @name sign_in
+PUT {{base_url}}/api/accounts/settings
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "current_password": "{{password}}",
+  "account": {
+    "password": "{{new_password}}"
+  }
+}
+
+###
+
+# @name sign_in
+
+PUT {{base_url}}/api/accounts/settings
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "current_password": "{{new_password}}",
+  "account": {
+    "password": "{{password}}"
+  }
+}
+
+###

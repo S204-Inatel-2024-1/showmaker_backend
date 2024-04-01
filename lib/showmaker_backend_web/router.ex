@@ -1,6 +1,8 @@
 defmodule ShowmakerBackendWeb.Router do
   use ShowmakerBackendWeb, :router
 
+  import ShowmakerBackendWeb.Accounts.AccountAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,10 +10,15 @@ defmodule ShowmakerBackendWeb.Router do
     plug :put_root_layout, html: {ShowmakerBackendWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    # plug :fetch_current_account
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :api_protected do
+    plug :fetch_api_account
   end
 
   scope "/", ShowmakerBackendWeb do
@@ -24,6 +31,24 @@ defmodule ShowmakerBackendWeb.Router do
     pipe_through :api
 
     get "/health_check", HealthCheckController, :index
+  end
+
+  scope "/api/accounts", ShowmakerBackendWeb.Accounts do
+    pipe_through :api
+
+    post "/register", AccountRegistrationController, :create
+    post "/confirm", AccountConfirmationController, :create
+    post "/confirm/:confirm_token", AccountConfirmationController, :update
+    post "/sign_in", AccountSessionController, :create
+    post "/reset_password", AccountResetPasswordController, :create
+    put "/reset_password/:reset_token", AccountResetPasswordController, :update
+  end
+
+  scope "/api/accounts", ShowmakerBackendWeb.Accounts do
+    pipe_through [:api, :api_protected]
+
+    delete "/sign_out", AccountSessionController, :delete
+    put "/settings", AccountSettingsController, :update
   end
 
   # Other scopes may use custom stacks.

@@ -25,6 +25,7 @@ defmodule ShowmakerBackend.Contexts.Accounts do
     if Account.valid_password?(account, password), do: account
   end
 
+  # credo:disable-for-next-line
   # TODO: maybe remove
   def get_account!(id), do: Repo.get!(Account, id)
 

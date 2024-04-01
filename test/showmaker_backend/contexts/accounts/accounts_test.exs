@@ -42,6 +42,7 @@ defmodule ShowmakerBackend.Contexts.Accounts.AccountsTest do
     end
   end
 
+  # credo:disable-for-next-line
   # TODO: maybe remove
   describe "get_account!/1" do
     test "raises if id is invalid" do

@@ -99,8 +99,8 @@ defmodule ShowmakerBackend.Contexts.Accounts do
     end
   end
 
-  def confirm_account(token) do
-    with {:ok, query} <- AccountToken.verify_token_query(token, "confirm"),
+  def confirm_account(confirm_token) do
+    with {:ok, query} <- AccountToken.verify_token_query(confirm_token, "confirm"),
          %Account{} = account <- Repo.one(query),
          {:ok, %{account: account}} <-
            account

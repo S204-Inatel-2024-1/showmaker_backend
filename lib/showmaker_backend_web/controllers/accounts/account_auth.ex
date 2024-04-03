@@ -18,7 +18,7 @@ defmodule ShowmakerBackendWeb.Accounts.AccountAuth do
     })
   end
 
-  def fetch_api_account(conn, _opts) do
+  def require_authentication(conn, _opts) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, account} <- Accounts.fetch_account_by_api_token(token) do
       assign(conn, :current_account, account)

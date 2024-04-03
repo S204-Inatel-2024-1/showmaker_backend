@@ -10,7 +10,6 @@ defmodule ShowmakerBackendWeb.Router do
     plug :put_root_layout, html: {ShowmakerBackendWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    # plug :fetch_current_account
   end
 
   pipeline :api do
@@ -18,7 +17,7 @@ defmodule ShowmakerBackendWeb.Router do
   end
 
   pipeline :api_protected do
-    plug :fetch_api_account
+    plug :require_authentication
   end
 
   scope "/", ShowmakerBackendWeb do

@@ -3,6 +3,7 @@ defmodule ShowmakerBackendWeb.Accounts.AccountSessionControllerTest do
 
   import ShowmakerBackend.AccountsFixtures
 
+  alias ShowmakerBackend.Contexts.Accounts
   alias ShowmakerBackendWeb.Accounts.AccountAuth
 
   setup do
@@ -24,7 +25,36 @@ defmodule ShowmakerBackendWeb.Accounts.AccountSessionControllerTest do
              } = json_response(conn, 403)
     end
 
+    test "emits error message when account has not been confirmed", %{
+      conn: conn,
+      account: account
+    } do
+      conn =
+        post(conn, ~p"/api/accounts/sign_in", %{
+          "account" => %{"email" => account.email, "password" => valid_account_password()}
+        })
+
+      description =
+        "A confirmation e-mail has been sent to #{account.email}. Make sure to check your spams or, if you can't find, request a new confirmation e-mail"
+
+      assert %{
+               "error" => %{
+                 "message" => "You must confirm your account before sign-in",
+                 "details" => %{
+                   "description" => ^description
+                 }
+               }
+             } = json_response(conn, 403)
+    end
+
     test "logs the account in", %{conn: conn, account: account} do
+      confirm_token =
+        extract_account_token(fn url ->
+          Accounts.deliver_account_confirmation_instructions(account, url)
+        end)
+
+      assert {:ok, _account} = Accounts.confirm_account(confirm_token)
+
       conn =
         post(conn, ~p"/api/accounts/sign_in", %{
           "account" => %{"email" => account.email, "password" => valid_account_password()}

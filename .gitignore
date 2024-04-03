@@ -47,4 +47,4 @@ npm-debug.log
 *.env
 
 # IDE files
-.vscode
+.vscode/settings.json

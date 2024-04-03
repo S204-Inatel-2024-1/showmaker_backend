@@ -6,7 +6,13 @@
   ],
   subdirectories: ["priv/*/migrations"],
   plugins: [
+    Absinthe.Formatter,
     Phoenix.LiveView.HTMLFormatter
   ],
-  inputs: ["*.{heex,ex,exs}", "{config,lib,test}/**/*.{heex,ex,exs}", "priv/*/seeds.exs"]
+  inputs: [
+    "*.{heex,ex,exs}",
+    "{config,lib,test}/**/*.{heex,ex,exs}",
+    "priv/*/seeds.exs",
+    "{lib,priv}/**/*.{gql,graphql}"
+  ]
 ]

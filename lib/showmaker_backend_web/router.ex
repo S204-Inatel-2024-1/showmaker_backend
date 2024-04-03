@@ -26,12 +26,6 @@ defmodule ShowmakerBackendWeb.Router do
     get "/", PageController, :home
   end
 
-  scope "/api", ShowmakerBackendWeb do
-    pipe_through :api
-
-    get "/health_check", HealthCheckController, :index
-  end
-
   scope "/api/accounts", ShowmakerBackendWeb.Accounts do
     pipe_through :api
 
@@ -48,6 +42,24 @@ defmodule ShowmakerBackendWeb.Router do
 
     delete "/sign_out", AccountSessionController, :delete
     put "/settings", AccountSettingsController, :update
+  end
+
+  scope "/api", ShowmakerBackendWeb do
+    pipe_through :api
+
+    get "/health_check", HealthCheckController, :index
+  end
+
+  scope "/api" do
+    pipe_through :api
+
+    # GraphQL
+    forward "/graphiql",
+            Absinthe.Plug.GraphiQL,
+            schema: ShowmakerBackendWeb.Schema,
+            interface: :simple
+
+    forward "/", Absinthe.Plug, schema: ShowmakerBackendWeb.Schema
   end
 
   # Other scopes may use custom stacks.
